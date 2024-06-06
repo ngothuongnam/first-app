@@ -1,17 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
 </head>
 <body>
-    <h2>Login</h2>
+    <h2>Login Page</h2>
+    <%
+        Cookie[] cookies = request.getCookies();
+        String savedUsername = null;
+        String savedPassword = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("username")) {
+                    savedUsername = cookie.getValue();
+                }
+                if (cookie.getName().equals("password")) {
+                    savedPassword = cookie.getValue();
+                }
+            }
+        }
+
+        if ("admin".equals(savedUsername) && "password123".equals(savedPassword)) {
+            response.sendRedirect("home.jsp");
+        }
+    %>
+    <% if (request.getParameter("error") != null) { %>
+        <p style="color: red;">Invalid username or password. Please try again.</p>
+    <% } %>
     <form action="login" method="post">
-        Username: <input type="text" name="username"><br>
-        Password: <input type="password" name="password"><br>
-        <input type="submit" value="Login">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Login</button>
     </form>
-    <c:if test="${not empty param.error}">
-        <p style="color:red;">Invalid username or password</p>
-    </c:if>
 </body>
 </html>
